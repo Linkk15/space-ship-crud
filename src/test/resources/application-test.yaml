@@ -1,0 +1,33 @@
+# DATABASE VARIABLES #
+database-platform: &database-platform h2
+database-driver: &database-driver org.h2.Driver
+database-dialect: &database-dialect org.hibernate.dialect.H2Dialect
+database-url: &database-url "r2dbc:h2:mem:///spaceshipscrud"
+database-schema: &database-schema spaceshipscrud
+database-user: &database-user sa
+database-pass: &database-pass
+
+spring:
+  application:
+    name: spaceshipscrud
+  main:
+    allow-bean-definition-overriding: true
+    profiles:
+      active: test
+    jackson:
+      deserialization:
+        fail-on-unknown-properties: false
+      serialization:
+        fail-on-empty-beans: false
+  r2dbc:
+    url: *database-url
+    username: *database-user
+    password: *database-pass
+    initialization-mode: always
+    properties:
+      schema: *database-schema
+  h2:
+    console:
+      enabled: true
+  banner:
+    location: classpath:/banner/banner.txt

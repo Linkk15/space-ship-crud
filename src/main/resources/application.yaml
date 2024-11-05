@@ -1,0 +1,91 @@
+# DATABASE VARIABLES #
+database-platform: &database-platform h2
+database-driver: &database-driver org.h2.Driver
+database-dialect: &database-dialect org.hibernate.dialect.H2Dialect
+database-url: &database-url "r2dbc:h2:mem:///spaceshipscrud"
+database-schema: &database-schema spaceshipscrud
+database-user: &database-user sa
+database-pass: &database-pass
+
+spring:
+  application:
+    name: spaceshipscrud
+  main:
+    allow-bean-definition-overriding: true
+    profiles:
+      active: dev
+    jackson:
+      deserialization:
+        fail-on-unknown-properties: false
+      serialization:
+        fail-on-empty-beans: false
+  cloud:
+    stream:
+      function:
+        definition: spaceShipConsumer;
+        stream:
+          bindings:
+            spaceShipProducer-out-0:
+              destination: #topic name
+              binder: kafka
+            spaceShipConsumer-in-0:
+              group: ${spring.application.name}
+              destination: #topic name
+              contentType: application/json
+              binder: kafka
+  security:
+    user:
+      name: admin
+      password: admin
+  r2dbc:
+    url: *database-url
+    username: *database-user
+    password: *database-pass
+    initialization-mode: always
+    properties:
+      schema: *database-schema
+  h2:
+    console:
+      enabled: true
+  banner:
+    location: classpath:/banner/banner.txt
+  devtools:
+    restart:
+      quiet-period: 2000
+      poll-interval: 3000
+    #TODO: make cache configuration for models (Sites, Tarjetas, NE..)
+  cache:
+    caffeine:
+      spaceships:
+        initial-capacity: 50
+        maximum-size: 10
+        expire-after-write: 1s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss:SSS} [%-25.25thread] %-5level %-48.48logger{48} - %msg%n"
+  level:
+    root: INFO
+    spaceshipscrud.crud: DEBUG
+    org.springframework: INFO
+    org.hibernate: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+kafka-enabled:
+  value: false
