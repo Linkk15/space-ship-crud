@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
-import org.springframework.web.reactive.config.EnableWebFlux;
 import spaceships.crud.domain.entities.SpaceShipEntity;
 import spaceships.crud.domain.enums.SpaceShipFranchiseEnum;
 import spaceships.crud.domain.repositories.SpaceShipRepository;

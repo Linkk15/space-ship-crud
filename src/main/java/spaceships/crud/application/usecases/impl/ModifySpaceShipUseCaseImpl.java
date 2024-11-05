@@ -24,7 +24,9 @@ public class ModifySpaceShipUseCaseImpl implements ModifySpaceShipUseCase {
   public void putSpaceShip(Long id, SpaceShip spaceShip) {
     spaceShipRepository
         .findById(id)
-        .doOnSuccess(spaceShipEntity -> updateSpaceShip.accept(spaceShipEntity, spaceShip, spaceShipRepository))
+        .doOnSuccess(
+            spaceShipEntity ->
+                updateSpaceShip.accept(spaceShipEntity, spaceShip, spaceShipRepository))
         .doOnError(error -> log.error("Error retrieving spaceship by id {}", id, error))
         .onErrorMap(error -> new SpaceShipNotFoundException(id))
         .subscribe();

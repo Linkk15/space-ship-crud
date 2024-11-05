@@ -4,4 +4,5 @@ import lombok.Builder;
 import spaceships.crud.domain.enums.SpaceShipErrorLevelEnum;
 
 @Builder
-public record SpaceShipError(String code, String message, SpaceShipErrorLevelEnum level, String description) {}
+public record SpaceShipError(
+    String code, String message, SpaceShipErrorLevelEnum level, String description) {}
