@@ -53,7 +53,6 @@ spring:
     restart:
       quiet-period: 2000
       poll-interval: 3000
-    #TODO: make cache configuration for models (Sites, Tarjetas, NE..)
   cache:
     caffeine:
       spaceships:
@@ -86,6 +85,7 @@ logging:
     org.hibernate: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.security.web: DEBUG
 
 kafka-enabled:
   value: false

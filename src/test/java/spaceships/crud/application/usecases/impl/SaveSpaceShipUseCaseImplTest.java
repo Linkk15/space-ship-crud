@@ -1,7 +1,6 @@
 package spaceships.crud.application.usecases.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,7 +41,9 @@ class SaveSpaceShipUseCaseImplTest {
 
     // when
     final var postController =
-        testRestTemplate.postForEntity("/spaceships/new", spaceShip, SpaceShip.class);
+        testRestTemplate
+            .withBasicAuth("admin", "admin")
+            .postForEntity("/spaceships/new", spaceShip, SpaceShip.class);
 
     // then
     assertThat(postController.getStatusCode()).isEqualTo(HttpStatus.CREATED);

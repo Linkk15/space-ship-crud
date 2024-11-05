@@ -29,7 +29,6 @@ public class SpaceShipsController {
   private final EraseSpaceShipUseCase eraseSpaceShipUseCase;
   private final ModifySpaceShipUseCase modifySpaceShipUseCase;
 
-  // @PreAuthorize("hasAnyAuthority('" + Authorities.CANALES_ADD + "')")
   @GetMapping(value = "/spaceship/{id}")
   @ResponseStatus(OK)
   public Mono<SpaceShip> getSpaceShip(@PathVariable Long id) {
