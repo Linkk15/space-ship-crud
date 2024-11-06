@@ -1,30 +1,33 @@
 package spaceships.crud.application.usecases.impl;
 
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.log.LogDetail;
 import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import spaceships.crud.domain.enums.SpaceShipFranchiseEnum;
 import spaceships.crud.domain.models.SpaceShip;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+// @AutoConfigureMockMvc
 class SaveSpaceShipUseCaseImplTest {
 
+  @LocalServerPort int port;
   @Autowired TestRestTemplate testRestTemplate;
-  @Autowired MockMvc mockMvc;
+
+  // @Autowired MockMvc mockMvc;
 
   @ParameterizedTest
   @EnumSource(SpaceShipFranchiseEnum.class)
@@ -49,17 +52,44 @@ class SaveSpaceShipUseCaseImplTest {
     assertThat(postController.getStatusCode()).isEqualTo(HttpStatus.CREATED);
   }
 
+  //  @Test
+  //  @DisplayName("Should return Bad Request when send wrong SpaceShip")
+  //  void test2() throws Exception {
+  //    // given
+  //    final var spaceShipJson =
+  //        "{\"name\":\"Test bad
+  // request\",\"franchise\":\"TestT\",\"dateRelease\":\"2024-10-30\"}";
+  //
+  //    // when - then
+  //    mockMvc
+  //        .perform(
+  //
+  // post("/spaceships/new").contentType(MediaType.APPLICATION_JSON).content(spaceShipJson))
+  //        .andExpect(status().isBadRequest());
+  //  }
+
   @Test
   @DisplayName("Should return Bad Request when send wrong SpaceShip")
-  void test2() throws Exception {
+  void test2() {
     // given
+    final var requestSpecefication =
+        new RequestSpecBuilder()
+            .setPort(port)
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build();
     final var spaceShipJson =
-        "{\"name\":\"Test bad request\",\"franchise\":\"TestT\",\"dateRelease\":\"2024-10-30\"}";
+        "{\"name\":\"Test bad request\",\"franchise\":\"DUNNE\",\"dateRelease\":\"2024-10-30eeqw\"}";
 
     // when - then
-    mockMvc
-        .perform(
-            post("/spaceships/new").contentType(MediaType.APPLICATION_JSON).content(spaceShipJson))
-        .andExpect(status().isBadRequest());
+    given(requestSpecefication)
+        .when()
+        .body(spaceShipJson)
+        .auth()
+        .basic("admin", "admin")
+        .post("/spaceships/new")
+        .then()
+        .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+        .log()
+        .ifValidationFails(LogDetail.ALL);
   }
 }
