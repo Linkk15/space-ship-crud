@@ -39,3 +39,12 @@ To run application in your local environment execute this command
   docker build -t space-ship-crud:latest .
   docker run -p 8080:8080 space-ship-crud:latest
 ```
+
+## Basic Auth
+
+Should make requests with Basic Auth with this credentials
+
+```bash
+  username: admin
+  password: admin
+```
