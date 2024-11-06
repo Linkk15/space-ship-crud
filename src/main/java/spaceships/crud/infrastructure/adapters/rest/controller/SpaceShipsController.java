@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import spaceships.crud.application.usecases.EraseSpaceShipUseCase;
@@ -70,14 +70,12 @@ public class SpaceShipsController {
     return saveSpaceShipUseCase
         .postSpaceShip(spaceShip)
         .map(
-            createdSpaceShip -> {
-              final var uri =
-                  ServletUriComponentsBuilder.fromCurrentRequest()
-                      .path("/{id}")
-                      .buildAndExpand(createdSpaceShip.id())
-                      .toUri();
-              return ResponseEntity.created(uri).body(createdSpaceShip);
-            })
+            createdSpaceShip ->
+                ResponseEntity.created(
+                        UriComponentsBuilder.fromPath("/{id}")
+                            .buildAndExpand(createdSpaceShip.id())
+                            .toUri())
+                    .body(createdSpaceShip))
         .onErrorReturn(ResponseEntity.badRequest().body(spaceShip));
   }
 
