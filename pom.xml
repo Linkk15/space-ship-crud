@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>spaceships.crud</groupId>
-	<artifactId>space-ship-scrud</artifactId>
+	<artifactId>space-ship-crud</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spaceshipscrud</name>
 	<description>Spaceships CRUD from series and movies</description>
